@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Math | Dabo</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF2F7;--card:#fff;--ink:#12263F;--mut:#5B6B80;--acc:#FFB400;--on:#12263F;--ok:#0E8F80;--bad:#D93A40;--line:#D5DDE8;--soft:#F3F6FA;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0D1726;--card:#16243A;--ink:#EAF0F8;--mut:#9DB0C8;--line:#2A3B55;--soft:#1C2D47;--ok:#2FD0BC;--bad:#FF6B70}}
+:root[data-theme="dark"]{--bg:#0D1726;--card:#16243A;--ink:#EAF0F8;--mut:#9DB0C8;--line:#2A3B55;--soft:#1C2D47;--ok:#2FD0BC;--bad:#FF6B70}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Rubik,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:28px;font-weight:800;margin:0;letter-spacing:-.5px}
+h1 i{display:inline-block;width:5px;height:.9em;background:var(--acc);margin:0 .3em;vertical-align:-.1em;border-radius:2px}
+h2{font-size:20px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:8px;font-weight:700;font-size:14px}
+.stats span{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:4px 12px}
+.xp{height:8px;background:var(--line);border-radius:4px;margin:12px 0;overflow:hidden}
+.xp div{height:100%;background:var(--acc);transition:width .4s}
+nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
+nav button{flex:1;white-space:nowrap}
+button,select,input{font:inherit;color:var(--ink)}
+button{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:500}
+button:hover{border-color:var(--acc)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+button.on,button.pri{background:var(--acc);border-color:var(--acc);color:#12263F;font-weight:700}
+button:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:12px}
+.big{font-size:clamp(24px,6vw,36px);font-weight:700;text-align:center;padding:22px 8px;background:var(--soft);border-radius:12px;margin:10px 0;overflow-wrap:anywhere}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+input{flex:1;min-width:120px;font-size:18px}
+.ok{color:var(--ok);font-weight:500}.bad{color:var(--bad);font-weight:500}.mut{color:var(--mut);font-size:14px}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}.bar b{width:150px;font-weight:500}
+.bar div{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}.bar div i{display:block;height:100%;background:var(--ok)}
+.sd{display:grid;grid-template-columns:repeat(4,1fr);width:min(100%,280px);margin:12px auto;border:3px solid var(--ink);border-radius:6px;overflow:hidden}
+.sd button{aspect-ratio:1;border:1px solid var(--line);border-radius:0;font-size:24px;padding:0;background:var(--card)}
+.sd button:nth-child(4n+2),.sd button:nth-child(4n+3){border-right:1px solid var(--line)}
+.sd button:nth-child(4n+2){border-right:3px solid var(--ink)}
+.sd button:nth-child(n+5):nth-child(-n+8){border-bottom:3px solid var(--ink)}
+.sd .giv{background:var(--soft);font-weight:800}.sd .sel{background:var(--acc);color:#12263F}.sd .err{color:var(--bad);background:rgba(217,58,64,.15)}
+.pad{justify-content:center}
+.stones{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:44px;padding:10px}
+.stones span{width:26px;height:26px;border-radius:50%;background:var(--acc);border:2px solid var(--ink)}
+.fc{min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:6px}
+.t{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><h1>Math<i></i>Dabo</h1><div class="stats"><span id="sLv"></span><span id="sXp"></span><span id="sSt"></span></div></div>
+<div class="xp"><div id="xpb"></div></div>
+<nav id="nav"></nav>
+
+<!-- 1. БАСТЫ БЕТ -->
+<section id="home" class="card">
+<h2>Миыңды жаттықтыр</h2>
+<p>Формулаларды жатта, есептер шығар, логикалық ойындарда AI-мен жарыс. Есептердің қиындығы сенің деңгейіңе қарай өзі өзгереді.</p>
+<h2 style="margin-top:16px">Менің меңгеруім</h2><div id="mast"></div>
+<p class="mut">Пайыз Байес әдісімен (Bayesian Knowledge Tracing) әр жауаптан кейін қайта есептеледі.</p>
+<button onclick="if(confirm('Барлық нәтиже өшеді. Жалғастырасыз ба?')){S={xp:0,streak:0,m:{}};save();ui()}">Нәтижені нөлдеу</button>
+</section>
+
+<!-- 2. ФОРМУЛАЛАР -->
+<section id="form" class="card" hidden>
+<h2>Формулалар картасы</h2>
+<div class="fc"><div class="mut" id="fT"></div><div class="big" id="fN" style="width:100%"></div></div>
+<div class="row pad" id="fB"></div>
+</section>
+
+<!-- 3. ЕСЕПТЕР -->
+<section id="prob" class="card" hidden>
+<h2>Есептер</h2>
+<div class="row"><select id="topic" onchange="newQ()"></select><span class="mut" id="qm"></span></div>
+<div class="big" id="q"></div>
+<div class="row"><input id="ans" inputmode="decimal" placeholder="Жауабың" autocomplete="off" onkeydown="if(event.key=='Enter')check()"><button class="pri" id="chk" onclick="check()">Тексеру</button></div>
+<p id="fb" aria-live="polite"></p>
+</section>
+
+<!-- 4. ЛОГИКА -->
+<section id="logic" hidden>
+<div class="card">
+<h2>Мини-судоку 4×4</h2>
+<p class="mut">Әр жолда, бағанда және 2×2 аймақта 1–4 сандары бір реттен болады.</p>
+<div class="row"><select id="sdl"><option value="0">Оңай</option><option value="1" selected>Орташа</option><option value="2">Қиын</option></select><button onclick="newSudoku()">Жаңа ойын</button><button onclick="hint()">Көмек (AI)</button></div>
+<div class="sd" id="sdg"></div>
+<div class="row pad" id="sdp"></div>
+<p id="sdm" aria-live="polite" class="mut"></p>
+</div>
+<div class="card">
+<h2>Тас алу ойыны: сен және AI</h2>
+<p class="mut">Кезекпен 1, 2 немесе 3 тас аласыңдар. Соңғы тасты алған адам ұтады.</p>
+<div class="row"><select id="nl"><option value="2">AI: бастаушы</option><option value="16" selected>AI: мықты</option></select><button onclick="newNim()">Жаңа ойын</button><button onclick="nimHint()">Стратегия</button></div>
+<div class="stones" id="stn"></div>
+<div class="row pad" id="nbt"></div>
+<p id="nm" aria-live="polite"></p>
+</div>
+</section>
+
+<!-- 5. AI ТЕКСЕРУ -->
+<section id="test" class="card" hidden>
+<h2>AI алгоритмдерін тексеру</h2>
+<p class="mut">Жобаға қосылған үш AI тақырыбы: 3-апта (CSP: судоку шешуші), 4-апта (Minimax және Alpha-Beta: тас ойыны), 6-апта (Байес: меңгеруді бағалау).</p>
+<button class="pri" onclick="runTests()">Тесттерді іске қосу</button>
+<div id="tr"></div>
+</section>
+</div>
+
+<script>
+/* ===== Негізгі күй және сақтау (localStorage қолжетімсіз болса да жұмыс істейді) ===== */
+const $=s=>document.querySelector(s);
+let S={xp:0,streak:0,m:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem("dabo")||"{}"))}catch(e){}
+function save(){try{localStorage.setItem("dabo",JSON.stringify(S))}catch(e){}}
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[R(0,a.length-1)];
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+const TOPICS={arif:"Арифметика",teng:"Теңдеулер",payiz:"Пайыз",geo:"Геометрия",dar:"Дәреже және түбір"};
+function addXP(n){S.xp+=n;save();ui()}
+function ui(){
+  const lv=Math.floor(S.xp/100)+1;
+  $("#sLv").textContent="Деңгей "+lv;$("#sXp").textContent=S.xp+" XP";$("#sSt").textContent="Серия: "+S.streak;
+  $("#xpb").style.width=(S.xp%100)+"%";
+  $("#mast").innerHTML=Object.keys(TOPICS).map(t=>`<div class="bar"><b>${TOPICS[t]}</b><div><i style="width:${Math.round(P(t)*100)}%"></i></div>${Math.round(P(t)*100)}%</div>`).join("");
+}
+
+/* ===== 6-апта: Байес әдісімен меңгеруді бағалау (Bayesian Knowledge Tracing) ===== */
+const P=t=>S.m[t]??0.3;
+function bkt(t,ok,store=true){
+  const pS=.1,pG=.2,pT=.15,p=P(t);
+  const post=ok?p*(1-pS)/(p*(1-pS)+(1-p)*pG):p*pS/(p*pS+(1-p)*(1-pS));
+  const np=post+(1-post)*pT;
+  if(store){S.m[t]=np;save()}
+  return np;
+}
+const level=t=>P(t)<.45?1:P(t)<.75?2:3;
+
+/* ===== Бөлімдер арасында ауысу ===== */
+const TABS=[["home","Басты"],["form","Формулалар"],["prob","Есептер"],["logic","Логика"],["test","AI тест"]];
+$("#nav").innerHTML=TABS.map(([id,n])=>`<button data-id="${id}" onclick="show('${id}')">${n}</button>`).join("");
+function show(id){
+  TABS.forEach(([i])=>$("#"+i).hidden=i!=id);
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.id==id));
+  if(id=="home")ui();
+}
+
+/* ===== Формулаларды жаттау ===== */
+const F=[
+["geo","Тіктөртбұрыштың ауданы","S = a · b"],["geo","Шаршының периметрі","P = 4a"],
+["geo","Үшбұрыштың ауданы","S = ½ · a · h"],["geo","Шеңбердің ұзындығы","C = 2πr"],
+["geo","Дөңгелектің ауданы","S = πr²"],["geo","Шардың көлемі","V = 4/3 · πr³"],
+["dar","Пифагор теоремасы","c² = a² + b²"],["dar","Қосындының квадраты","(a + b)² = a² + 2ab + b²"],
+["dar","Квадраттар айырмасы","a² − b² = (a − b)(a + b)"],["teng","Дискриминант","D = b² − 4ac"],
+["teng","Квадрат теңдеудің түбірі","x = (−b ± √D) / 2a"],["payiz","a санының p пайызы","a · p / 100"],
+["arif","Арифметикалық прогрессия","aₙ = a₁ + (n − 1)d"]
+];
+let fc=null;
+function nextCard(){
+  const w=F.map(f=>1.1-P(f[0]));let r=Math.random()*w.reduce((a,b)=>a+b,0),i=0;
+  while(r>w[i]&&i<F.length-1){r-=w[i];i++}
+  fc=F[i];$("#fT").textContent=TOPICS[fc[0]];$("#fN").textContent=fc[1];
+  $("#fB").innerHTML='<button class="pri" onclick="flip()">Жауабын көрсету</button>';
+}
+function flip(){
+  $("#fN").textContent=fc[2];
+  $("#fB").innerHTML='<button onclick="grade(true)">Білемін</button><button onclick="grade(false)">Білмедім</button>';
+}
+function grade(ok){bkt(fc[0],ok);if(ok){S.streak++;addXP(5)}else{S.streak=0;ui()}save();nextCard()}
+
+/* ===== Есептер генераторы (деңгейге байланысты) ===== */
+const GEN={
+arif(l){const a=R(2,9*l+3),b=R(2,9),c=R(2,9);
+  if(l==1)return{q:`${a} + ${b} × ${c}`,a:a+b*c,h:"Алдымен көбейту, содан кейін қосу."};
+  if(l==2){const d=R(1,30);return{q:`(${a} + ${b}) × ${c} − ${d}`,a:(a+b)*c-d,h:"Алдымен жақша ішін есепте."}}
+  const d=R(2,9);return{q:`${a} × ${b} − ${c} × ${d}`,a:a*b-c*d,h:"Екі көбейтіндіні бөлек тауып, азайт."}},
+teng(l){const x=R(2,12),a=R(2,9),b=R(1,15);
+  if(l==1)return{q:`x + ${b} = ${x+b}.  x = ?`,a:x,h:"Қосылғышты екінші жаққа азайтып аудар."};
+  if(l==2)return{q:`${a}x + ${b} = ${a*x+b}.  x = ?`,a:x,h:"Алдымен ${b}-ны азайт, сосын ${a}-ға бөл.".replace("${b}",b).replace("${a}",a)};
+  return{q:`${a}(x + ${b}) = ${a*(x+b)}.  x = ?`,a:x,h:"Екі жағын "+a+"-ға бөл, сосын "+b+"-ны азайт."}},
+payiz(l){const k=R(1,10),n=20*k;
+  if(l==1){const p=pick([10,50,25]);return{q:`${n}-тің ${p}% = ?`,a:n*p/100,h:"a · p / 100"}}
+  if(l==2){const p=pick([5,15,20,30,40]);return{q:`${n}-тің ${p}% = ?`,a:n*p/100,h:"a · p / 100"}}
+  const p=5*R(1,8);return{q:`Бағасы ${n} теңге тауарға ${p}% жеңілдік. Жаңа баға (теңге)?`,a:n*(100-p)/100,h:"Бағаны (100 − p)% деп есепте."}},
+geo(l){const a=R(3,15),b=R(2,12);
+  if(l==1)return pick([{q:`Қабырғалары ${a} және ${b} тіктөртбұрыштың ауданы?`,a:a*b,h:"S = a · b"},{q:`Қабырғалары ${a} және ${b} тіктөртбұрыштың периметрі?`,a:2*(a+b),h:"P = 2(a + b)"}]);
+  if(l==2){const c=2*R(2,9);return{q:`Табаны ${c}, биіктігі ${b} үшбұрыштың ауданы?`,a:c*b/2,h:"S = ½ · a · h"}}
+  return{q:`Радиусы ${b} дөңгелектің ауданы? (π = 3,14; жауабы 0,01 дәлдікпен)`,a:+(3.14*b*b).toFixed(2),h:"S = πr²"}},
+dar(l){const a=R(2,12);
+  if(l==1)return{q:`${a}² = ?`,a:a*a,h:"a² = a · a"};
+  if(l==2)return{q:`√${a*a} = ?`,a:a,h:"Квадраты осы санға тең оң санды тап."};
+  const [x,y,z]=pick([[3,4,5],[5,12,13],[8,15,17],[6,8,10]]);return{q:`Катеттері ${x} және ${y} тікбұрышты үшбұрыштың гипотенузасы?`,a:z,h:"c² = a² + b²"}}
+};
+$("#topic").innerHTML='<option value="mix">Аралас</option>'+Object.keys(TOPICS).map(t=>`<option value="${t}">${TOPICS[t]}</option>`).join("");
+let cur=null,answered=false;
+function newQ(){
+  const sel=$("#topic").value,t=sel=="mix"?pick(Object.keys(TOPICS)):sel,l=level(t);
+  cur={t,l,...GEN[t](l)};answered=false;
+  $("#q").textContent=cur.q;$("#qm").textContent=`${TOPICS[t]}, ${l}-деңгей`;
+  $("#ans").value="";$("#fb").textContent="";$("#fb").className="";$("#chk").textContent="Тексеру";$("#ans").focus();
+}
+function check(){
+  if(answered)return newQ();
+  const fb=$("#fb"),v=parseFloat($("#ans").value.replace(",","."));
+  if(!isFinite(v)){fb.textContent="Жауапты сан түрінде енгізіңіз, мысалы 12 немесе 3,5.";fb.className="bad";return}
+  const ok=Math.abs(v-cur.a)<0.011;answered=true;bkt(cur.t,ok);
+  if(ok){S.streak++;fb.textContent=`Дұрыс! +${10*cur.l} XP. Формула: ${cur.h}`;fb.className="ok";addXP(10*cur.l)}
+  else{S.streak=0;fb.textContent=`Дұрыс жауап: ${String(cur.a).replace(".",",")}. Кеңес: ${cur.h}`;fb.className="bad";ui()}
+  save();$("#chk").textContent="Келесі есеп";
+}
+
+/* ===== 3-апта: CSP. Судоку: backtracking + MRV + forward checking ===== */
+function cand(g,i){
+  const r=i>>2,c=i&3,u=new Set();
+  for(let k=0;k<4;k++){u.add(g[r*4+k]);u.add(g[k*4+c])}
+  const br=r&2,bc=c&2;for(let y=0;y<2;y++)for(let x=0;x<2;x++)u.add(g[(br+y)*4+bc+x]);
+  return [1,2,3,4].filter(v=>!u.has(v));
+}
+function mrv(g){let b=-1,bd=null;for(let i=0;i<16;i++)if(!g[i]){const d=cand(g,i);if(!bd||d.length<bd.length){b=i;bd=d}}return[b,bd]}
+function solve(g,out,lim){
+  const [b,bd]=mrv(g);
+  if(b<0){if(out&&!out.s)out.s=g.slice();return 1}
+  let n=0;for(const v of bd){g[b]=v;n+=solve(g,out,lim);g[b]=0;if(n>=lim)break}return n;
+}
+function conf(g){
+  const s=new Set();
+  for(let i=0;i<16;i++)if(g[i])for(let j=0;j<16;j++)if(j!=i&&g[j]==g[i]){
+    const r=i>>2,c=i&3,r2=j>>2,c2=j&3;
+    if(r==r2||c==c2||((r>>1)==(r2>>1)&&(c>>1)==(c2>>1)))s.add(i);
+  }
+  return s;
+}
+let sd=null;
+function makePuzzle(lv){
+  const g=Array(16).fill(0);shuf([1,2,3,4]).forEach((v,i)=>g[i]=v);
+  const o={};solve(g,o,1);const p=o.s.slice();let rem=0;
+  for(const i of shuf([...Array(16).keys()])){
+    if(rem>=[6,9,11][lv])break;
+    const k=p[i];p[i]=0;
+    if(solve(p.slice(),null,2)===1)rem++;else p[i]=k;
+  }
+  return p;
+}
+function newSudoku(){
+  const p=makePuzzle(+$("#sdl").value);
+  sd={g:p.slice(),giv:p.map(v=>v>0),sel:-1,hints:0,done:false};
+  $("#sdm").textContent="Ұяшықты таңдап, санды бас.";drawSd();
+}
+function drawSd(){
+  const cf=conf(sd.g);
+  $("#sdg").innerHTML=sd.g.map((v,i)=>`<button class="${sd.giv[i]?"giv":""} ${sd.sel==i?"sel":""} ${cf.has(i)?"err":""}" onclick="selCell(${i})" aria-label="Ұяшық ${(i>>2)+1}-жол ${(i&3)+1}-баған">${v||""}</button>`).join("");
+  $("#sdp").innerHTML=[1,2,3,4,0].map(n=>`<button onclick="put(${n})">${n||"Өшіру"}</button>`).join("");
+}
+function selCell(i){if(sd.done)return;sd.sel=i;drawSd()}
+function put(n){
+  if(sd.done||sd.sel<0||sd.giv[sd.sel]){$("#sdm").textContent="Алдымен бос ұяшықты таңда.";return}
+  sd.g[sd.sel]=n;drawSd();winCheck();
+}
+function winCheck(){
+  if(sd.g.every(v=>v)&&!conf(sd.g).size){
+    sd.done=true;const xp=Math.max(10,40-10*sd.hints);
+    $("#sdm").textContent=`Тамаша! Судоку шешілді. +${xp} XP`;$("#sdm").className="ok";addXP(xp);
+  }
+}
+function hint(){
+  if(!sd||sd.done)return;const m=$("#sdm");m.className="mut";
+  if(conf(sd.g).size){m.textContent="Алдымен қызыл ұяшықтардағы қайшылықты түзет.";return}
+  const o={};if(!solve(sd.g.slice(),o,1)){m.textContent="Қазіргі толтыруың тығырыққа апарады: соңғы қойған сандарды өшір.";return}
+  const [b,bd]=mrv(sd.g);sd.g[b]=o.s[b];sd.hints++;sd.sel=b;
+  m.textContent=bd.length==1?`${(b>>2)+1}-жол, ${(b&3)+1}-бағанда тек ${bd[0]} қалады: нұсқасы ең аз ұяшықтан бастаймыз (MRV).`:`${(b>>2)+1}-жол, ${(b&3)+1}-бағанда ${bd.join(", ")} мүмкін; шешімі ${o.s[b]}.`;
+  drawSd();winCheck();
+}
+
+/* ===== 4-апта: Minimax + Alpha-Beta. Тас алу ойыны ===== */
+function ab(n,max,d,a,b,c){
+  c.n++;
+  if(n==0)return max?-1:1;   // соңғы тасты алған ұтады
+  if(d==0)return 0;
+  if(max){let v=-2;for(let k=1;k<=3&&k<=n;k++){v=Math.max(v,ab(n-k,false,d-1,a,b,c));a=Math.max(a,v);if(a>=b)break}return v}
+  let v=2;for(let k=1;k<=3&&k<=n;k++){v=Math.min(v,ab(n-k,true,d-1,a,b,c));b=Math.min(b,v);if(a>=b)break}return v;
+}
+function aiMove(n,depth){
+  const c={n:0};let best=-3,ms=[];
+  for(let k=1;k<=3&&k<=n;k++){const v=ab(n-k,false,depth,-2,2,c);if(v>best){best=v;ms=[k]}else if(v==best)ms.push(k)}
+  return{k:pick(ms),v:best,nodes:c.n};
+}
+let nm=null;
+function newNim(){nm={n:R(12,19),over:false,busy:false,depth:+$("#nl").value};$("#nm").textContent="Сен бірінші жүресің.";$("#nm").className="";drawNim()}
+function drawNim(){
+  $("#stn").innerHTML="<span></span>".repeat(nm.n);
+  $("#nbt").innerHTML=[1,2,3].map(k=>`<button class="pri" onclick="take(${k})" ${nm.over||nm.busy||k>nm.n?"disabled":""}>${k} тас</button>`).join("");
+}
+function take(k){
+  nm.n-=k;const m=$("#nm");
+  if(nm.n==0){nm.over=true;m.textContent="Сен ұттың! +"+(nm.depth>2?60:25)+" XP";m.className="ok";S.streak++;addXP(nm.depth>2?60:25);drawNim();return}
+  nm.busy=true;m.textContent="AI ойланып жатыр…";m.className="mut";drawNim();
+  setTimeout(()=>{
+    const r=aiMove(nm.n,nm.depth);nm.n-=r.k;nm.busy=false;
+    const ev=r.v>0?"ұтатынын біледі":r.v<0?"ұтылатынын көріп тұр":"нәтижені әлі білмейді";
+    if(nm.n==0){nm.over=true;S.streak=0;save();ui();m.textContent=`AI ${r.k} тас алып, ұтты. Қайта көр!`;m.className="bad"}
+    else{m.textContent=`AI ${r.k} тас алды (${r.nodes} күйді қарады, ${ev}). Сенің кезегің.`;m.className=""}
+    drawNim();
+  },450);
+}
+function nimHint(){
+  if(!nm)return;const r=nm.n%4;
+  $("#nm").className="mut";
+  $("#nm").textContent=r==0?"Қалған тас саны 4-ке еселі (n mod 4 = 0): қазір сен қиын жағдайдасың. AI қателессе ғана ұтасың.":`Ұтатын жүріс: ${r} тас ал, сонда қалғаны 4-ке еселі болады. Әр айналымда сен пен AI қосындысы 4 тас болсын.`;
+}
+
+/* ===== Автоматты тесттер ===== */
+function runTests(){
+  const T=[
+    ["Байес: дұрыс жауап меңгеруді арттырады",()=>bkt("arif",true,false)>P("arif")],
+    ["Байес: қате жауап меңгеруді азайтады",()=>bkt("arif",false,false)<P("arif")],
+    ["CSP: 4×4 судоку жалғыз шешімді жасалады",()=>{const p=makePuzzle(1);return solve(p.slice(),null,2)===1}],
+    ["CSP: шешім қайшылықсыз",()=>{const o={};solve(Array(16).fill(0),o,1);return o.s.every(v=>v)&&conf(o.s).size==0}],
+    ["Minimax: 4 тас қалса, жүретін ойыншы ұтылады",()=>ab(4,true,20,-2,2,{n:0})===-1],
+    ["Minimax: 5 тас қалса, жүретін ойыншы ұтады",()=>ab(5,true,20,-2,2,{n:0})===1],
+    ["AI 9 тастан 1 тас алады (қалғаны 8)",()=>aiMove(9,20).k===1],
+    ["Есептер генераторы: 300 есеп, жауабы сан",()=>{for(let i=0;i<300;i++){const t=pick(Object.keys(TOPICS)),g=GEN[t](R(1,3));if(!isFinite(g.a)||!g.q)return false}return true}],
+    ["Қате енгізу: сан емес мәтін қабылданбайды",()=>!isFinite(parseFloat("abc".replace(",",".")))]
+  ];
+  $("#tr").innerHTML=T.map(([n,f])=>{let ok=false;try{ok=!!f()}catch(e){}return `<div class="t"><b class="${ok?"ok":"bad"}">${ok?"Өтті":"Қате"}</b>${n}</div>`}).join("");
+}
+
+/* ===== Іске қосу ===== */
+ui();nextCard();newQ();newSudoku();newNim();show("home");
+</script>
+</body>
+</html>
